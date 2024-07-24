@@ -87,6 +87,9 @@ python filespacer.py
 > [!TIP]
 > Contributions are welcome! Feel free to submit issues, fork the repository, and send pull requests.
 
+Thank you Icon8 for the icon!
+<a target="_blank" href="https://icons8.com/icon/qSSG7p6hY0Gu/archive">Archive</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+
 
 ---
 
