@@ -13,7 +13,7 @@
 ### Extract Zip File
 
 > [!NOTE]
-> Make sure your input zip file is valid and not corrupted.
+> Make sure your input zip file is valid
 
 1. Click "Retrieve Zip-File" to select a `.zip` file.
    
