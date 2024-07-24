@@ -32,7 +32,7 @@
 
 1. Click "Retrieve File to Compress" to select a file you want to compress.
    
-   ![Retrieve File to Compress](screenshots/22.png)
+   ![Retrieve File to Compress](screenshots/33.png)
 
 2. Adjust the "Compression Level" slider to set the desired compression level. The higher the number, the more compressed the file will be, but it may take longer.
 
@@ -61,7 +61,7 @@
 
 1. Click "Retrieve Zstandard File" to select a `.zst` file.
    
-   ![Retrieve Zstandard File](screenshots/33.png)
+   ![Retrieve Zstandard File](screenshots/22.png)
 
 2. Enter the output path where the decompressed file will be saved.
 3. The progress and any messages will be displayed in the terminal output.
