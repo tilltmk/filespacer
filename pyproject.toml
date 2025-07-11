@@ -62,7 +62,7 @@ filespacer = "filespacer.__main__:main"
 filespacer-cli = "filespacer.cli:cli"
 
 [tool.setuptools]
-packages = ["filespacer", "filespacer.tests"]
+packages = ["filespacer"]
 
 [tool.setuptools.package-data]
 filespacer = ["*.md"]
