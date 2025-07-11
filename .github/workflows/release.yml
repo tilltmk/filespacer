@@ -1,0 +1,101 @@
+name: Build Release Binaries
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  build-binaries:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+          - os: windows-latest
+            platform: windows
+            arch: x64
+          - os: macos-latest
+            platform: macos
+            arch: x64
+          - os: macos-latest
+            platform: macos
+            arch: arm64
+
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install pyinstaller
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --name filespacer-${{ matrix.platform }}-${{ matrix.arch }} \
+                    --onefile \
+                    --clean \
+                    --noconfirm \
+                    --add-data "README.md:." \
+                    --hidden-import filespacer \
+                    --hidden-import click \
+                    --hidden-import zstandard \
+                    --hidden-import tqdm \
+                    filespacer/__main__.py
+    
+    - name: Create GUI binary
+      run: |
+        pyinstaller --name filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }} \
+                    --onefile \
+                    --windowed \
+                    --clean \
+                    --noconfirm \
+                    --add-data "README.md:." \
+                    --hidden-import filespacer \
+                    --hidden-import tkinter \
+                    --hidden-import zstandard \
+                    --hidden-import tqdm \
+                    filespacer/gui.py
+    
+    - name: Compress binaries (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      run: |
+        cd dist
+        tar -czf filespacer-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz filespacer-${{ matrix.platform }}-${{ matrix.arch }}
+        tar -czf filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}
+    
+    - name: Compress binaries (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd dist
+        Compress-Archive -Path filespacer-${{ matrix.platform }}-${{ matrix.arch }}.exe -DestinationPath filespacer-${{ matrix.platform }}-${{ matrix.arch }}.zip
+        Compress-Archive -Path filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}.exe -DestinationPath filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}.zip
+    
+    - name: Upload Release Assets (Linux/macOS)
+      if: matrix.os != 'windows-latest'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/filespacer-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+          dist/filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload Release Assets (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/filespacer-${{ matrix.platform }}-${{ matrix.arch }}.zip
+          dist/filespacer-gui-${{ matrix.platform }}-${{ matrix.arch }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

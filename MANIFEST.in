@@ -1,0 +1,15 @@
+include README.md
+include LICENSE
+include CHANGELOG.md
+include requirements.txt
+include pyproject.toml
+recursive-include filespacer *.py
+recursive-include tests *.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store
+prune .git
+prune .github
+prune dist
+prune build
+prune *.egg-info
